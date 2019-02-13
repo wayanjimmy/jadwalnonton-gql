@@ -45,7 +45,7 @@ type Query {
 }
 
 type Area {
-  locale: String
+  name: String
   url: String
 }
 
