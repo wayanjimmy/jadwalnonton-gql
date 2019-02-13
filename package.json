@@ -1,12 +1,17 @@
 {
   "name": "jadwalnonton-gql",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./src/index.ts",
   "author": "Wayan Jimmy <jimmyeatcrab@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": "11.9.0",
+    "yarn": "1.13.0"
+  },
   "scripts": {
-    "start": "ts-node-dev --inspect -- src/index.ts",
-    "build": "tsc"
+    "dev": "ts-node-dev --inspect -- src/index.ts",
+    "build": "tsc",
+    "heroku-postbuild": "yarn build"
   },
   "dependencies": {
     "axios": "^0.18.0",
