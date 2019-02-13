@@ -1,15 +1,26 @@
 import {GraphQLServer} from 'graphql-yoga'
 import axios from 'axios'
 import cheerio from 'cheerio'
+import {Cache} from 'memory-cache'
 
 import {ResolverMap, Area, Theater, Movie} from './utils'
+
+enum CacheType {
+  Area = 'area',
+  Theater = 'theater',
+  Movie = 'movie'
+}
+
+const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000
+
+let memCache = new Cache()
 
 const typeDefs = `
 type Query {
   hello(name: String): String!
-  allAreas(page: Int): [Area!]!
-  allTheaters(url: String): [Theater!]!
-  allMovies(url: String): [Movie!]!
+  allAreas: [Area!]!
+  allTheaters(url: String!): [Theater!]!
+  allMovies(url: String!): [Movie!]!
 }
 
 type Area {
@@ -49,6 +60,12 @@ const resolvers: ResolverMap = {
   Query: {
     hello: (_parent, {name = 'World'}) => `Hello ${name}`,
     allAreas: async (_parent, _args) => {
+      let areasFromCache = memCache.get(CacheType.Area)
+
+      if (areasFromCache) {
+        return areasFromCache
+      }
+
       let locales: Array<Area> = []
 
       try {
@@ -65,11 +82,19 @@ const resolvers: ResolverMap = {
             }
           )
           .get()
+
+        memCache.put(CacheType.Area, locales, MILLISECONDS_IN_A_DAY)
       } catch (_error) {}
 
       return locales
     },
     allTheaters: async (_parent, {url}) => {
+      let theatersFromCache = memCache.get(`${CacheType.Theater}_${url}`)
+
+      if (theatersFromCache) {
+        return theatersFromCache
+      }
+
       let theaters: Array<Theater> = []
       try {
         let {data: html} = await axios.get<string>(url)
@@ -86,10 +111,18 @@ const resolvers: ResolverMap = {
             })
           )
           .get()
+
+        memCache.put(`${CacheType.Theater}_${url}`, theaters, MILLISECONDS_IN_A_DAY)
       } catch (_error) {}
       return theaters
     },
     allMovies: async (_parent, {url}) => {
+      let moviesFromCache = memCache.get(`${CacheType.Movie}_${url}`)
+
+      if (moviesFromCache) {
+        return moviesFromCache
+      }
+
       let movies: Array<Movie> = []
       let {data: html} = await axios.get(url)
       let $ = cheerio.load(html)
@@ -132,6 +165,8 @@ const resolvers: ResolverMap = {
           }
         )
         .get()
+
+      memCache.put(`${CacheType.Movie}_${url}`, movies, MILLISECONDS_IN_A_DAY)
       try {
       } catch (_error) {}
 
