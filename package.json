@@ -6,7 +6,7 @@
   "license": "MIT",
   "engines": {
     "node": "11.9.0",
-    "yarn": "1.13.0"
+    "yarn": "1.14.0"
   },
   "scripts": {
     "dev": "ts-node-dev --inspect -- src/index.ts",

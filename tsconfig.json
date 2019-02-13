@@ -5,7 +5,7 @@
     "module": "commonjs",
     "sourceMap": true,
     "esModuleInterop": true,
-    "rootDir": "src",
+    "rootDir": "./",
     "outDir": "dist",
     "lib": [
       "esnext", "dom"
