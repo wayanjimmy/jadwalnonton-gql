@@ -4,10 +4,6 @@
   "main": "./src/index.ts",
   "author": "Wayan Jimmy <jimmyeatcrab@gmail.com>",
   "license": "MIT",
-  "engines": {
-    "node": "10.15.0",
-    "yarn": "1.13.0"
-  },
   "scripts": {
     "dev": "ts-node-dev --inspect -- src/index.ts",
     "build": "tsc",
