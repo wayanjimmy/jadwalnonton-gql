@@ -1,9 +1,10 @@
 {
   "name": "jadwalnonton-gql",
   "version": "1.0.0",
-  "main": "./src/index.ts",
+  "main": "N/A",
   "author": "Wayan Jimmy <jimmyeatcrab@gmail.com>",
-  "license": "MIT",
+  "description": "Unofficial graphql api for checking movie schedule from jadwalnonton.com ",
+  "license": "Unlicense",
   "scripts": {
     "dev": "ts-node-dev --inspect -- src/index.ts",
     "build": "tsc",
