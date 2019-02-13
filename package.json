@@ -6,24 +6,43 @@
   "license": "MIT",
   "engines": {
     "node": "11.9.0",
-    "yarn": "1.14.0"
+    "yarn": "1.13.0"
   },
   "scripts": {
     "dev": "ts-node-dev --inspect -- src/index.ts",
     "build": "tsc",
+    "test": "jest",
     "heroku-postbuild": "yarn build"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
+    "graphql-request": "^1.8.2",
     "graphql-yoga": "^1.17.4"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/cheerio": "^0.22.10",
     "@types/express": "^4.16.1",
+    "@types/jest": "^24.0.3",
     "@types/node": "^11.9.3",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.5",
     "ts-node-dev": "^1.0.0-pre.32",
     "typescript": "^3.3.3"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }
