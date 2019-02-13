@@ -1,40 +1,8 @@
 import {GraphQLServer} from 'graphql-yoga'
 import axios from 'axios'
-import * as express from 'express'
 import cheerio from 'cheerio'
 
-interface Context {
-  req: express.Request
-  res: express.Response
-}
-
-type Resolver = (parent: any, args: any, context: Context, info: any) => any
-
-interface ResolverMap {
-  [key: string]: {
-    [key: string]: Resolver | {[key: string]: Resolver}
-  }
-}
-
-type Area = {
-  name: string
-  url: string
-}
-
-type Theater = {
-  name: string
-  url: string
-}
-
-type Movie = {
-  information: string
-  title: string
-  rating: string
-  hours: Array<string>
-  genre: string
-  duration: string
-  price: string
-}
+import {ResolverMap, Area, Theater, Movie} from './utils'
 
 const typeDefs = `
 type Query {
@@ -64,6 +32,18 @@ type Movie {
   price: String
 }
 `
+
+function getRating($: CheerioStatic, element: CheerioElement) {
+  let rating = $(element)
+    .find('.rating')
+    .text()
+
+  if (rating === '') {
+    return 'unrated'
+  }
+
+  return rating
+}
 
 const resolvers: ResolverMap = {
   Query: {
@@ -122,32 +102,32 @@ const resolvers: ResolverMap = {
               .split(' - ')
             let hours = $(element)
               .find('.usch > li.active')
-              .map((index, hour) => {
+              .map((_index, hour) => {
                 return $(hour).text()
               })
               .get()
+            let information = $(element)
+              .find('h2 > a')
+              .attr('href')
+            let title = $(element)
+              .find('h2 > a')
+              .text()
+
+            let rating = getRating($, element)
+
+            let price = $(element)
+              .find('.htm')
+              .text()
+              .replace('Harga tiket masuk ', '')
+
             return {
-              information: $(element)
-                .find('h2 > a')
-                .attr('href'),
-              title: $(element)
-                .find('h2 > a')
-                .text(),
-              rating:
-                $(element)
-                  .find('.rating')
-                  .text() === ''
-                  ? 'unrated'
-                  : $(element)
-                      .find('.rating')
-                      .text(),
+              information,
+              title,
+              rating,
               hours,
               genre,
               duration,
-              price: $(element)
-                .find('.htm')
-                .text()
-                .replace('Harga tiket masuk ', '')
+              price
             }
           }
         )
