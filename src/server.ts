@@ -13,7 +13,7 @@ enum CacheType {
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000
 
-let memCache = new Cache()
+const memCache = new Cache()
 
 const typeDefs = `
 type Query {
@@ -177,5 +177,5 @@ const resolvers: ResolverMap = {
 
 export async function startServer() {
   let server = new GraphQLServer({ typeDefs, resolvers })
-  return await server.start().then(() => console.log('server started localhost:4000'))
+  return await server.start()
 }

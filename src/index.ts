@@ -1,3 +1,3 @@
 import { startServer } from './server'
 
-startServer()
+startServer().then(() => console.log('server running on localhost:4000'))
