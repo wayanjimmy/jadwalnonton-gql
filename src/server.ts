@@ -1,9 +1,9 @@
-import {GraphQLServer} from 'graphql-yoga'
+import { GraphQLServer } from 'graphql-yoga'
 import axios from 'axios'
 import cheerio from 'cheerio'
-import {Cache} from 'memory-cache'
+import { Cache } from 'memory-cache'
 
-import {ResolverMap, Area, Theater, Movie} from './utils'
+import { ResolverMap, Area, Theater, Movie } from './utils'
 
 enum CacheType {
   Area = 'area',
@@ -58,7 +58,7 @@ function getRating($: CheerioStatic, element: CheerioElement) {
 
 const resolvers: ResolverMap = {
   Query: {
-    hello: (_parent, {name = 'World'}) => `Hello ${name}`,
+    hello: (_parent, { name = 'World' }) => `Hello ${name}`,
     allAreas: async (_parent, _args) => {
       let areasFromCache = memCache.get(CacheType.Area)
 
@@ -69,7 +69,7 @@ const resolvers: ResolverMap = {
       let locales: Array<Area> = []
 
       try {
-        let {data: html} = await axios.get<string>('https://jadwalnonton.com/bioskop')
+        let { data: html } = await axios.get<string>('https://jadwalnonton.com/bioskop')
         let $ = cheerio.load(html)
 
         locales = $('#ctfilcon > div.filterlist > ul:nth-child(1) li a')
@@ -88,7 +88,7 @@ const resolvers: ResolverMap = {
 
       return locales
     },
-    allTheaters: async (_parent, {url}) => {
+    allTheaters: async (_parent, { url }) => {
       let theatersFromCache = memCache.get(`${CacheType.Theater}_${url}`)
 
       if (theatersFromCache) {
@@ -97,7 +97,7 @@ const resolvers: ResolverMap = {
 
       let theaters: Array<Theater> = []
       try {
-        let {data: html} = await axios.get<string>(url)
+        let { data: html } = await axios.get<string>(url)
         let $ = cheerio.load(html)
         theaters = $('#main > div.row.clearfix.thlist .item.theater')
           .map(
@@ -116,7 +116,7 @@ const resolvers: ResolverMap = {
       } catch (_error) {}
       return theaters
     },
-    allMovies: async (_parent, {url}) => {
+    allMovies: async (_parent, { url }) => {
       let moviesFromCache = memCache.get(`${CacheType.Movie}_${url}`)
 
       if (moviesFromCache) {
@@ -124,7 +124,7 @@ const resolvers: ResolverMap = {
       }
 
       let movies: Array<Movie> = []
-      let {data: html} = await axios.get(url)
+      let { data: html } = await axios.get(url)
       let $ = cheerio.load(html)
       movies = $('#main > div.mtom20 .item')
         .map(
@@ -176,6 +176,6 @@ const resolvers: ResolverMap = {
 }
 
 export async function startServer() {
-  let server = new GraphQLServer({typeDefs, resolvers})
-  return await server.start()
+  let server = new GraphQLServer({ typeDefs, resolvers })
+  return await server.start().then(() => console.log('server started localhost:4000'))
 }

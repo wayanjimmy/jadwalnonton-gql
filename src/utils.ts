@@ -1,4 +1,4 @@
-import {Request, Response} from 'express'
+import { Request, Response } from 'express'
 
 interface Context {
   req: Request
@@ -9,7 +9,7 @@ type Resolver = (parent: any, args: any, context: Context, info: any) => any
 
 export interface ResolverMap {
   [key: string]: {
-    [key: string]: Resolver | {[key: string]: Resolver}
+    [key: string]: Resolver | { [key: string]: Resolver }
   }
 }
 

@@ -1,6 +1,6 @@
-import {request} from 'graphql-request'
+import { request } from 'graphql-request'
 
-import {startServer} from './server'
+import { startServer } from './server'
 
 let app: any
 
@@ -21,6 +21,6 @@ query {
 test('hello', async () => {
   try {
     let response = await request('http://127.0.0.1:4000', query)
-    expect(response).toEqual({hello: 'Hello World'})
+    expect(response).toEqual({ hello: 'Hello World' })
   } catch (_error) {}
 })
