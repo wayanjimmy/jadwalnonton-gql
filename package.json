@@ -26,7 +26,7 @@
     "@types/memory-cache": "^0.2.0",
     "@types/node": "^13.1.0",
     "jest": "^24.8.0",
-    "ts-jest": "^25.1.0",
+    "ts-jest": "^25.4.0",
     "ts-node-dev": "^1.0.0-pre.32",
     "typescript": "^3.3.3"
   },
